@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+class Node
+{
+private:
+	int height;
+	int value;
+	int key;
+	Node* right;
+	Node* left;
+public:
+	Node() : height{ NULL }, value{ NULL }, key{ NULL }, right{ nullptr }, left{ nullptr } {}
+	int getHeight(Node node)
+	{
+		return (node == nullptr) ? -1 : height;
+	}
+	int getValue()
+	{
+		return key;
+	}
+	int getKey()
+	{
+		return value;
+	}
+	int getBalance(Node node)
+	{
+		return (node == NULL) ? 0 : getHeight(node.right - getHeight(node.left));
+	}
+	Node* getRight()
+	{
+		return right;
+	}
+	Node* getLeft()
+	{
+		return left;
+	}
+	void setkey(int x)
+	{
+		key = x;
+	}
+	void swap(Node a, Node b)
+	{
+		a.key ^= b.key ^= a.key ^= b.key;
+		a.value ^= b.value ^= a.value ^= b.value;
+	}
+	void RightRotate(Node& node)
+	{
+		swap(node, *node.left);
+		Node temp = node.right;
+		node.right = node.left;
+		node.left = node.right->left;
+		node.right->left = node.right->right;
+		node.right->right = temp;
+		updateHeight(node.right);
+		updateHeight(node);
+	}
+	void balance(Node node)
+	{
+		int bal = getBalance(node);
+		if (bal == -2)
+		{
+			if (getBalance(node.right) == 1)
+			{
+				leftRotate(node.left);
+				rightRotate(node);
+			}
+		}
+		else if (bal == 2)
+		{
+			if (getBalance(node.right) == -1) rightRotate(node.right);
+			LeftRotate(node);
+		}
+	}
+	void LeftRotate(Node& node)
+	{
+		swap(node, node.right&);
+		Node temp = node.left;
+		node.left = node.right;
+		node.right = node.left->right;
+		node.left->right = node.left->left;
+		node.left->left = temp;
+		updateHeight(node.left);
+		updateHeight(node);
+	}
+	void updateHeight(Node& node)
+	{
+		node.height = max(getHeight(node.left), getHeight(node.right)) + 1;
+	}
+	~Node()
+	{
+		delete[] right;
+		delete[] left;  
+	}
+};

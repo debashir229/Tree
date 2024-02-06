@@ -1,0 +1,141 @@
+#include <iostream>
+
+using namespace std;
+
+struct Elem 
+{
+    int key;
+    Elem* parent, * left, * right;
+};
+
+class Tree 
+{
+    Elem* root;
+public:
+    Tree();
+    ~Tree();
+    void Print(Elem* node);
+    Elem* Search(Elem* node);
+    Elem* Min(Elem* node);
+    Elem* Max(Elem* node);
+    Elem* Next(Elem* node);
+    Elem* Previous(Elem* node);
+    void Insert(Elem* node);
+    void Del(Elem* node = nullptr);
+    Elem* GetRoot();
+};
+
+Tree::Tree() 
+{
+    root = nullptr;
+}
+
+Tree::~Tree() 
+{
+    Del();
+}
+
+void Tree::Print(Elem* node) 
+{
+    if (node != nullptr) 
+    {
+        Print(node->left);
+        cout << node->key << " ";
+        Print(node->right);
+    }
+    return;
+}
+
+Elem* Tree::Search(Elem* node) 
+{
+
+    return node;
+}
+
+Elem* Tree::Min(Elem* node) 
+{
+    if (node != nullptr) 
+        while (node->left != nullptr)
+            node = node->left;
+    return node;    
+}
+
+Elem* Tree::Max(Elem* node) 
+{
+    if (node != nullptr)
+        while (node->right != nullptr)
+            node = node->right;
+    return node;
+}
+
+Elem* Tree::Next(Elem* node) 
+{
+    Elem* y = nullptr;
+    if (node != nullptr) {
+        if (node->right != nullptr)
+            return Min(node->right);
+        y = node->parent;
+        while (y != nullptr && node == y->right) {
+            node = y;
+            y = y->parent;
+        }
+    }
+    return y;
+}
+
+Elem* Tree::Previous(Elem* node) 
+{
+    Elem* y = nullptr;
+    if (node != nullptr) {
+        if (node->left != nullptr)
+            return Max(node->left);
+        y = node->parent;
+        while (y != nullptr && node == y->left) {
+            node = y;
+            y = y->parent;
+        }
+    }
+    return y;
+}
+
+Elem* Tree::GetRoot() 
+{
+    return root;
+}
+
+void Tree::Insert(Elem* z) 
+{
+    z->left = nullptr;
+    z->right = nullptr;
+
+    Elem* y = nullptr;
+    Elem* node = root;
+
+    while (node != nullptr) {
+        y = node;
+        if (z->key < node->key)
+            node = node->left;
+        else if (z->key == node->key)
+        {
+            cout << "Такой элемент уже существует в дереве." << endl;
+            return;
+        }
+        else
+            node = node->right;
+    }
+    z->parent = y;
+
+    if (y == nullptr)
+        root = z;
+    else if (z->key < y->key)
+        y->left = z;
+    else
+        y->right = z;
+    
+    return;
+}
+
+int main()
+{
+    std::cout << "Hello World!\n";
+}
